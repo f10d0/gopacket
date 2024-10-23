@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2012 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -6,9 +7,9 @@
 
 // arpscan implements ARP scanning of all interfaces' local networks using
 // gopacket and its subpackages.  This example shows, among other things:
-//   * Generating and sending packet data
-//   * Reading in packet data and interpreting it
-//   * Use of the 'pcap' subpackage for reading/writing
+//   - Generating and sending packet data
+//   - Reading in packet data and interpreting it
+//   - Use of the 'pcap' subpackage for reading/writing
 package main
 
 import (

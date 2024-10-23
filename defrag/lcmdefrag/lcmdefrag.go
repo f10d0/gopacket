@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2018 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -32,8 +33,9 @@ type lcmPacket struct {
 // LCMDefragmenter supports defragmentation of LCM messages.
 //
 // References
-//   https://lcm-proj.github.io/
-//   https://github.com/lcm-proj/lcm
+//
+//	https://lcm-proj.github.io/
+//	https://github.com/lcm-proj/lcm
 type LCMDefragmenter struct {
 	packets map[uint32]*lcmPacket
 }

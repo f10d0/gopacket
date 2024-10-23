@@ -1284,8 +1284,7 @@ func (dnskey DNSKEY) encode(data []byte, offset int) {
 	binary.BigEndian.PutUint16(data[offset:], uint16(dnskey.Flags))
 	data[offset+2] = uint8(dnskey.Protocol)
 	data[offset+3] = uint8(dnskey.Algorithm)
-	offset += 4
-	copy(data[offset:], dnskey.PublicKey)
+	copy(data[offset+4:], dnskey.PublicKey)
 }
 
 // DNSKEYFlag common values

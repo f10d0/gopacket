@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2012 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -26,9 +27,11 @@ func (m *MPLS) LayerType() gopacket.LayerType { return LayerTypeMPLS }
 
 // ProtocolGuessingDecoder attempts to guess the protocol of the bytes it's
 // given, then decode the packet accordingly.  Its algorithm for guessing is:
-//  If the packet starts with byte 0x45-0x4F: IPv4
-//  If the packet starts with byte 0x60-0x6F: IPv6
-//  Otherwise:  Error
+//
+//	If the packet starts with byte 0x45-0x4F: IPv4
+//	If the packet starts with byte 0x60-0x6F: IPv6
+//	Otherwise:  Error
+//
 // See draft-hsmit-isis-aal5mux-00.txt for more detail on this approach.
 type ProtocolGuessingDecoder struct{}
 

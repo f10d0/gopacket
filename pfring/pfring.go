@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2012 Google, Inc. All rights reserved.
 // Copyright 2009-2011 Andreas Krennmair. All rights reserved.
 //
@@ -206,9 +207,10 @@ func (r *Ring) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error
 // to old bytes when using ZeroCopyReadPacketData... if you need to keep data past
 // the next time you call ZeroCopyReadPacketData, use ReadPacketData, which copies
 // the bytes into a new buffer for you.
-//  data1, _, _ := handle.ZeroCopyReadPacketData()
-//  // do everything you want with data1 here, copying bytes out of it if you'd like to keep them around.
-//  data2, _, _ := handle.ZeroCopyReadPacketData()  // invalidates bytes in data1
+//
+//	data1, _, _ := handle.ZeroCopyReadPacketData()
+//	// do everything you want with data1 here, copying bytes out of it if you'd like to keep them around.
+//	data2, _, _ := handle.ZeroCopyReadPacketData()  // invalidates bytes in data1
 func (r *Ring) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
 	r.mu.Lock()
 	err = r.getNextBufPtrLocked(&ci)

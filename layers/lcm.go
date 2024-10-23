@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2018 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -29,8 +30,9 @@ const (
 // variety of programming languages.
 //
 // References
-//   https://lcm-proj.github.io/
-//   https://github.com/lcm-proj/lcm
+//
+//	https://lcm-proj.github.io/
+//	https://github.com/lcm-proj/lcm
 type LCM struct {
 	// Common (short & fragmented header) fields
 	Magic          uint32

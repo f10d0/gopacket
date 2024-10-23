@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2016 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -78,7 +79,7 @@ func (o DHCPMsgType) String() string {
 	}
 }
 
-//DHCPMagic is the RFC 2131 "magic cooke" for DHCP.
+// DHCPMagic is the RFC 2131 "magic cooke" for DHCP.
 var DHCPMagic uint32 = 0x63825363
 
 // DHCPv4 contains data for a single DHCP packet.

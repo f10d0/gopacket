@@ -1,14 +1,16 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2012 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
+//go:build ignore
 // +build ignore
 
 // This binary handles creating string constants and function templates for enums.
 //
-//  go run gen.go | gofmt > enums_generated.go
+//	go run gen.go | gofmt > enums_generated.go
 package main
 
 import (

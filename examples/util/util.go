@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2012 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -19,10 +20,10 @@ var cpuprofile = flag.String("cpuprofile", "", "Where to write CPU profile")
 // Run starts up stuff at the beginning of a main function, and returns a
 // function to defer until the function completes.  It should be used like this:
 //
-//   func main() {
-//     defer util.Run()()
-//     ... stuff ...
-//   }
+//	func main() {
+//	  defer util.Run()()
+//	  ... stuff ...
+//	}
 func Run() func() {
 	flag.Parse()
 	if *cpuprofile != "" {

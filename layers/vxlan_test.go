@@ -1,3 +1,4 @@
+// Copyright 2024 TochusC. All rights reserved.
 // Copyright 2016 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -7,9 +8,10 @@
 package layers
 
 import (
-	"github.com/tochusc/gopacket"
 	"reflect"
 	"testing"
+
+	"github.com/tochusc/gopacket"
 )
 
 // VXLAN is specifed in RFC 7348
