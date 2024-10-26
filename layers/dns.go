@@ -354,18 +354,6 @@ func (d *DNS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 		d.Questions = append(d.Questions, q)
 	}
 
-	// For some horrible reason, if we do the obvious thing in this loop:
-	//   var r DNSResourceRecord
-	//   if blah := r.decode(blah); err != nil {
-	//     return err
-	//   }
-	//   d.Foo = append(d.Foo, r)
-	// the Go compiler thinks that 'r' escapes to the heap, causing a malloc for
-	// every Answer, Authority, and Additional.  To get around this, we do
-	// something really silly:  we append an empty resource record to our slice,
-	// then use the last value in the slice to call decode.  Since the value is
-	// already in the slice, there's no WAY it can escape... on the other hand our
-	// code is MUCH uglier :(
 	for i := 0; i < int(d.ANCount); i++ {
 		d.Answers = append(d.Answers, DNSResourceRecord{})
 		if offset, err = d.Answers[i].decode(data, offset, df, &d.buffer); err != nil {
