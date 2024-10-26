@@ -6,57 +6,49 @@
 // tree.
 
 /*
-Package layers provides decoding layers for many common protocols.
+layers 包提供了许多常见协议的 待解码层（Decoder Layers） 实现。
 
-The layers package contains decode implementations for a number of different
-types of packet layers.  Users of gopacket will almost always want to also use
-layers to actually decode packet data into useful pieces. To see the set of
-protocols that gopacket/layers is currently able to decode,
-look at the set of LayerTypes defined in the Variables sections. The
-layers package also defines endpoints for many of the common packet layers
-that have source/destination addresses associated with them, for example IPv4/6
-(IPs) and TCP/UDP (ports).
-Finally, layers contains a number of useful enumerations (IPProtocol,
-EthernetType, LinkType, PPPType, etc...).  Many of these implement the
-gopacket.Decoder interface, so they can be passed into gopacket as decoders.
+layers 包实现了许多常见协议层的解码功能，
+使用 gopacket 的人几乎总是需要用到 layers 来将数据包解码为有用的部分。
+要了解 gopacket/layers 目前能够解码的协议集合，请查看 Variables 部分定义的 LayerTypes 集合。
+layers 包还为常见的，拥有源地址、目的地址的数据包协议层定义了 端点（Endpoints），
+如 IPv4/6（IPs）和 TCP/UDP（端口）。
+最后，layers 包含了许多有用的枚举类型（IPProtocol、EthernetType、LinkType、PPPType 等）。
+其中许多都实现了 gopacket.Decoder 接口，因此可以将它们作为 待解码层 传递给 gopacket。
 
-Most common protocol layers are named using acronyms or other industry-common
-names (IPv4, TCP, PPP).  Some of the less common ones have their names expanded
-(CiscoDiscoveryProtocol).
-For certain protocols, sub-parts of the protocol are split out into their own
-layers (SCTP, for example).  This is done mostly in cases where portions of the
-protocol may fulfill the capabilities of interesting layers (SCTPData implements
-ApplicationLayer, while base SCTP implements TransportLayer), or possibly
-because splitting a protocol into a few layers makes decoding easier.
+大多数常见的协议层使用首字母缩写或其他行业常见名称（IPv4、TCP、PPP）命名。
+一些不太常见的协议层则将其名称展开（CiscoDiscoveryProtocol）。
+对于某些协议，协议的子部分被拆分到自己的层中（例如 SCTP）。
+这主要是在协议的某些部分可能包含了 内容层（Interesting Layers），
+（SCTPData 实现 ApplicationLayer，而基本 SCTP 实现 TransportLayer），
+或者可能是因为将协议拆分为几个层将使解码更容易等。
 
-This package is meant to be used with its parent,
-http://github.com/tochusc/gopacket.
+这个包是为了与其父包 http://github.com/tochusc/gopacket 一起使用而设计的。
 
-Port Types
+# 端口类型
 
-Instead of using raw uint16 or uint8 values for ports, we use a different port
-type for every protocol, for example TCPPort and UDPPort.  This allows us to
-override string behavior for each port, which we do by setting up port name
-maps (TCPPortNames, UDPPortNames, etc...).  Well-known ports are annotated with
-their protocol names, and their String function displays these names:
+gopacket 使用不同的端口类型来代替原始的 uint16 或 uint8 值，例如 TCPPort 和 UDPPort。
+而不是使用原始的 uint16 或 uint8 值来表示端口，
+这使得 gopacket 可以为每个端口重写字符串行为，
+gopacket 通过设置端口名称映射（TCPPortNames、UDPPortNames 等）来实现这一点。
+知名端口使用其协议名称进行注释，并且其 String 函数显示这些名称：
 
-  p := TCPPort(80)
-  fmt.Printf("Number: %d  String: %v", p, p)
-  // Prints: "Number: 80  String: 80(http)"
+	p := TCPPort(80)
+	fmt.Printf("Number: %d  String: %v", p, p)
+	// Prints: "Number: 80  String: 80(http)"
 
-Modifying Decode Behavior
+# 修改解码行为
 
-layers links together decoding through its enumerations.  For example, after
-decoding layer type Ethernet, it uses Ethernet.EthernetType as its next decoder.
-All enumerations that act as decoders, like EthernetType, can be modified by
-users depending on their preferences.  For example, if you have a spiffy new
-IPv4 decoder that works way better than the one built into layers, you can do
-this:
+layers 包通过枚举将解码链接在一起。例如，在解码以太网层类型之后，
+它使用 Ethernet.EthernetType 作为下一个解码器。
+所有充当解码器的枚举类型，如 EthernetType，都可以根据用户的喜好进行修改。
+例如，如果您有一个比 layers 包内置的 IPv4 解码器更好得多的新 IPv4 解码器，
+您可以这样做：
 
- var mySpiffyIPv4Decoder gopacket.Decoder = ...
- layers.EthernetTypeMetadata[EthernetTypeIPv4].DecodeWith = mySpiffyIPv4Decoder
+	var mySpiffyIPv4Decoder gopacket.Decoder = ...
+	layers.EthernetTypeMetadata[EthernetTypeIPv4].DecodeWith = mySpiffyIPv4Decoder
 
-This will make all future ethernet packets use your new decoder to decode IPv4
-packets, instead of the built-in decoder used by gopacket.
+这将使所有未来的以太网数据包都使用您的新解码器来解码 IPv4 数据包，
+而不是使用 gopacket 的内置解码器。
 */
 package layers

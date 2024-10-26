@@ -8,8 +8,8 @@
 //go:build ignore
 // +build ignore
 
-// This binary pulls known ports from IANA, and uses them to populate
-// iana_ports.go's TCPPortNames and UDPPortNames maps.
+// gen.go 文件 将从 IANA 获取已知端口，
+// 并使用它们填充 iana_ports.go 的 TCPPortNames 和 UDPPortNames 映射。
 //
 //	go run gen.go | gofmt > iana_ports.go
 package main

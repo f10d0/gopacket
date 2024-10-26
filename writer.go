@@ -11,100 +11,80 @@ import (
 	"fmt"
 )
 
-// SerializableLayer allows its implementations to be written out as a set of bytes,
-// so those bytes may be sent on the wire or otherwise used by the caller.
-// SerializableLayer is implemented by certain Layer types, and can be encoded to
-// bytes using the LayerWriter object.
+// SerializableLayer 接口的实现允许将其写入为一组字节，
+// 以便这些字节可以通过网络发送或由调用者使用。
+// SerializableLayer 由某些 Layer 类型实现，并可以使用 LayerWriter 对象将其编码为字节。
 type SerializableLayer interface {
-	// SerializeTo writes this layer to a slice, growing that slice if necessary
-	// to make it fit the layer's data.
-	//  Args:
-	//   b:  SerializeBuffer to write this layer on to.  When called, b.Bytes()
-	//     is the payload this layer should wrap, if any.  Note that this
-	//     layer can either prepend itself (common), append itself
-	//     (uncommon), or both (sometimes padding or footers are required at
-	//     the end of packet data). It's also possible (though probably very
-	//     rarely needed) to overwrite any bytes in the current payload.
-	//     After this call, b.Bytes() should return the byte encoding of
-	//     this layer wrapping the original b.Bytes() payload.
-	//   opts:  options to use while writing out data.
-	//  Returns:
-	//   error if a problem was encountered during encoding.  If an error is
-	//   returned, the bytes in data should be considered invalidated, and
-	//   not used.
+	// SerializeTo 将该数据层写入到一个字节切片中，
+	// 如果需要，字节切片的尺寸将会增大，以适应该数据层中的数据。
+	// 参数：
+	//   b： 用于写入该数据层的 SerializeBuffer。当调用时，b.Bytes() 返回的是该数据层应该包装的有效载荷。
+	//     请注意，数据层可能需要在有效载荷之前（常见）、之后（不常见）或
+	//	   两者（有时需要在数据包数据的末尾添加填充或页脚）上进行修改。
+	//     同时也可能（尽管可能非常少见）需要覆盖当前有效载荷中的部分字节。
+	//     在此调用后 b.Bytes() 应该返回该数据层编码后的结果。
+	//   opts：在写出数据时使用的选项。
+	// 返回：
+	//  如果在编码过程中遇到问题，则返回错误。
+	// 	如果返回错误，则应该认为数据中的字节无效，不应使用。
 	//
-	// SerializeTo calls SHOULD entirely ignore LayerContents and
-	// LayerPayload.  It just serializes based on struct fields, neither
-	// modifying nor using contents/payload.
+	//  SerializeTo 调用应该完全忽略 LayerContents 和 LayerPayload。
+	//  它只是基于结构字段进行序列化，既不修改也不使用内容/有效载荷。
 	SerializeTo(b SerializeBuffer, opts SerializeOptions) error
-	// LayerType returns the type of the layer that is being serialized to the buffer
+	// LayerType 返回正在写入到缓冲区的数据层的类型
 	LayerType() LayerType
 }
 
-// SerializeOptions provides options for behaviors that SerializableLayers may want to
-// implement.
+// SerializeOptions 提供了 SerializableLayer 可能想要实现的行为选项。
 type SerializeOptions struct {
-	// FixLengths determines whether, during serialization, layers should fix
-	// the values for any length field that depends on the payload.
+	// FixLengths 决定在序列化期间，数据层是否应该修复依赖于 有效载荷 的任何 长度字段 的值。
 	FixLengths bool
-	// ComputeChecksums determines whether, during serialization, layers
-	// should recompute checksums based on their payloads.
+	// ComputeChecksums 决定在序列化期间，数据层是否应该基于有效载荷重新计算校验和。
 	ComputeChecksums bool
 }
 
-// SerializeBuffer is a helper used by gopacket for writing out packet layers.
-// SerializeBuffer starts off as an empty []byte.  Subsequent calls to PrependBytes
-// return byte slices before the current Bytes(), AppendBytes returns byte
-// slices after.
+// SerializeBuffer 是 gopacket 用于写出数据包数据层的辅助工具。
+// SerializeBuffer 从一个空的 []byte 开始。
+// 后续的 PrependBytes 调用将返回当前 Bytes() 之前的字节切片，
+// AppendBytes 返回当前 Bytes() 之后的字节切片。
 //
-// Byte slices returned by PrependBytes/AppendBytes are NOT zero'd out, so if
-// you want to make sure they're all zeros, set them as such.
+// PrependBytes/AppendBytes 返回的字节切片不会被清零，
+// 所以如果你想确保它们全是零，请自行设置为零。
 //
-// SerializeBuffer is specifically designed to handle packet writing, where unlike
-// with normal writes it's easier to start writing at the inner-most layer and
-// work out, meaning that we often need to prepend bytes.  This runs counter to
-// typical writes to byte slices using append(), where we only write at the end
-// of the buffer.
+// SerializeBuffer 是专门为处理数据包写入而设计的，
+// 数据包写入与普通写入不同，首先从最内层开始写入，然后再逐步向外写入，往往更加容易。
+// 这意味着数据包写入经常需要在开头添加字节。
+// 而这与使用 append() 写入字节切片的典型写入相悖，
+// 在典型写入情况下，我们通常往往只在缓冲区的末尾写入。
 //
-// It can be reused via Clear.  Note, however, that a Clear call will invalidate the
-// byte slices returned by any previous Bytes() call (the same buffer is
-// reused).
+// 它可以通过 Clear 方法重用。
+// 但是请注意，Clear 调用将使任何先前 Bytes() 调用返回的字节切片无效（内置数组被重用）。
 //
-//  1. Reusing a write buffer is generally much faster than creating a new one,
-//     and with the default implementation it avoids additional memory allocations.
-//  2. If a byte slice from a previous Bytes() call will continue to be used,
-//     it's better to create a new SerializeBuffer.
+// 1. 重用写入缓冲区通常比创建新缓冲区快得多，并且在默认实现中，这样避免了额外的内存分配。
+// 2. 如果先前 Bytes() 调用返回的字节切片后续仍需使用，最好是创建一个新的 SerializeBuffer。
 //
-// The Clear method is specifically designed to minimize memory allocations for
-// similar later workloads on the SerializeBuffer.  IE: if you make a set of
-// Prepend/Append calls, then clear, then make the same calls with the same
-// sizes, the second round (and all future similar rounds) shouldn't allocate
-// any new memory.
+// Clear 方法专门设计用于最小化 SerializeBuffer 上的后续内存分配。
+// 例如：如果你进行了一组 Prepend/Append 调用，然后清除，然后使用相同的大小进行相同的调用，
+// 第二轮（以及所有类似的后续轮次）不应分配任何新内存。
 type SerializeBuffer interface {
-	// Bytes returns the contiguous set of bytes collected so far by Prepend/Append
-	// calls.  The slice returned by Bytes will be modified by future Clear calls,
-	// so if you're planning on clearing this SerializeBuffer, you may want to copy
-	// Bytes somewhere safe first.
+	// Bytes 返回到目前为止由 Prepend/Append 调用收集的连续字节集。
+	// Bytes 返回的切片将被后续的 Clear 调用修改，所以如果你打算清除这个 SerializeBuffer，
+	// 你可能会想先将 Bytes 复制到一个安全的地方。
 	Bytes() []byte
-	// PrependBytes returns a set of bytes which prepends the current bytes in this
-	// buffer.  These bytes start in an indeterminate state, so they should be
-	// overwritten by the caller.  The caller must only call PrependBytes if they
-	// know they're going to immediately overwrite all bytes returned.
+	// PrependBytes 返回前置到当前缓冲区的字节切片。
+	// 这些字节的起始状态是不确定的，所以调用者应该覆盖它们。
+	// 只有在调用者知道他们将立即覆盖所有返回的字节时，才能调用 PrependBytes。
 	PrependBytes(num int) ([]byte, error)
-	// AppendBytes returns a set of bytes which appends the current bytes in this
-	// buffer.  These bytes start in an indeterminate state, so they should be
-	// overwritten by the caller.  The caller must only call AppendBytes if they
-	// know they're going to immediately overwrite all bytes returned.
+	// AppendBytes 返回后置到当前缓冲区的字节切片。
+	// 这些字节的起始状态是不确定的，所以调用者应该覆盖它们。
+	// 只有在调用者知道他们将立即覆盖所有返回的字节时，才能调用 AppendBytes。
 	AppendBytes(num int) ([]byte, error)
-	// Clear resets the SerializeBuffer to a new, empty buffer.  After a call to clear,
-	// the byte slice returned by any previous call to Bytes() for this buffer
-	// should be considered invalidated.
+	// Clear 重置 SerializeBuffer 为一个新的、空的缓冲区。
+	// 在调用 Clear 后，对于该缓冲区的任何先前调用 Bytes() 返回的字节切片都应该被视为无效。
 	Clear() error
-	// Layers returns all the Layers that have been successfully serialized into this buffer
-	// already.
+	// Layers 返回已经成功序列化到这个缓冲区的所有数据层。
 	Layers() []LayerType
-	// PushLayer adds the current Layer to the list of Layers that have been serialized
-	// into this buffer.
+	// PushLayer 将当前数据层添加到已经序列化到这个缓冲区的数据层列表中。
 	PushLayer(LayerType)
 }
 

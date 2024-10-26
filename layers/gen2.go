@@ -8,7 +8,7 @@
 //go:build ignore
 // +build ignore
 
-// This binary handles creating string constants and function templates for enums.
+// gen2.go 创建字符串常量和枚举的函数模板。
 //
 //	go run gen.go | gofmt > enums_generated.go
 package main

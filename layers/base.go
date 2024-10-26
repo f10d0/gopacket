@@ -11,23 +11,21 @@ import (
 	"github.com/tochusc/gopacket"
 )
 
-// BaseLayer is a convenience struct which implements the LayerData and
-// LayerPayload functions of the Layer interface.
+// BaseLayer 是一个实现了 Layer 接口中 LayerData 和 LayerPayload 函数的便利结构体。
 type BaseLayer struct {
-	// Contents is the set of bytes that make up this layer.  IE: for an
-	// Ethernet packet, this would be the set of bytes making up the
-	// Ethernet frame.
+	// Contents 是构成这个层的字集合。
+	// 例如：对于一个以太网数据包，这将是构成以太网帧的字节集。
 	Contents []byte
-	// Payload is the set of bytes contained by (but not part of) this
-	// Layer.  Again, to take Ethernet as an example, this would be the
-	// set of bytes encapsulated by the Ethernet protocol.
+
+	// Payload 是这个层所承载的（但不是这个层的一部分的）字节集合。
+	// 再以以太网为例，Payload 的内容 将是以太网协议所封装的字节集合。
 	Payload []byte
 }
 
-// LayerContents returns the bytes of the packet layer.
+// LayerContents 返回该数据包协议层的字节。
 func (b *BaseLayer) LayerContents() []byte { return b.Contents }
 
-// LayerPayload returns the bytes contained within the packet layer.
+// LayerPayload 返回该数据包协议层所承载的字节。
 func (b *BaseLayer) LayerPayload() []byte { return b.Payload }
 
 type layerDecodingLayer interface {
@@ -49,5 +47,7 @@ func decodingLayerDecoder(d layerDecodingLayer, data []byte, p gopacket.PacketBu
 	return p.NextDecoder(next)
 }
 
-// hacky way to zero out memory... there must be a better way?
+// 用来清空内存的奇妙方法(Hacky way)...
+// 应该会有更好的方法？
+// - 译者注：不懂
 var lotsOfZeros [1024]byte

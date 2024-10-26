@@ -11,61 +11,56 @@ import (
 	"fmt"
 )
 
-// Layer represents a single decoded packet layer (using either the
-// OSI or TCP/IP definition of a layer).  When decoding, a packet's data is
-// broken up into a number of layers.  The caller may call LayerType() to
-// figure out which type of layer they've received from the packet.  Optionally,
-// they may then use a type assertion to get the actual layer type for deep
-// inspection of the data.
+// 在解码时，数据包的数据被分解为多个数据层。
+// 调用者可以调用 LayerType() 来确定他们从数据包中收到的数据层类型。
+// 另外，也可以使用类型断言来获取实际的数据层类型，以深入检查数据。
 type Layer interface {
-	// LayerType is the gopacket type for this layer.
+	// LayerType 是这个协议层的 gopacket 类型。
 	LayerType() LayerType
-	// LayerContents returns the set of bytes that make up this layer.
+	// LayerContents 返回构成这个协议层的字节集合。
 	LayerContents() []byte
-	// LayerPayload returns the set of bytes contained within this layer, not
-	// including the layer itself.
+	// LayerPayload 返回这个层所承载的字节集合（即有效载荷），不包括这个层本身。
 	LayerPayload() []byte
 }
 
-// Payload is a Layer containing the payload of a packet.  The definition of
-// what constitutes the payload of a packet depends on previous layers; for
-// TCP and UDP, we stop decoding above layer 4 and return the remaining
-// bytes as a Payload.  Payload is an ApplicationLayer.
+// Payload 是一个包含数据包有效载荷的数据层。
+// 有效载荷的定义取决于之前的数据层；对于 TCP 和 UDP，我们在第 4 层以上停止解码，
+// 并将剩余的字节作为 Payload 返回，此时返回的 Payload 是一个 ApplicationLayer。
 type Payload []byte
 
-// LayerType returns LayerTypePayload
+// LayerType 返回 LayerTypePayload
 func (p Payload) LayerType() LayerType { return LayerTypePayload }
 
-// LayerContents returns the bytes making up this layer.
+// LayerContents 返回构成 Payload 层的字节集合。
 func (p Payload) LayerContents() []byte { return []byte(p) }
 
-// LayerPayload returns the payload within this layer.
+// LayerPayload 返回 Payload 层所承载的字节集合（即有效载荷），不包括这个层本身。
 func (p Payload) LayerPayload() []byte { return nil }
 
-// Payload returns this layer as bytes.
+// Payload 以字节形式返回 Payload 层。
 func (p Payload) Payload() []byte { return []byte(p) }
 
-// String implements fmt.Stringer.
+// String 实现 fmt.Stringer 接口。
 func (p Payload) String() string { return fmt.Sprintf("%d byte(s)", len(p)) }
 
-// GoString implements fmt.GoStringer.
+// GoString 实现 fmt.GoStringer 接口。
 func (p Payload) GoString() string { return LongBytesGoString([]byte(p)) }
 
-// CanDecode implements DecodingLayer.
+// CanDecode 实现 DecodingLayer 接口。
 func (p Payload) CanDecode() LayerClass { return LayerTypePayload }
 
-// NextLayerType implements DecodingLayer.
+// NextLayerType 实现 DecodingLayer 接口。
 func (p Payload) NextLayerType() LayerType { return LayerTypeZero }
 
-// DecodeFromBytes implements DecodingLayer.
+// DecodeFromBytes 实现 DecodingLayer 接口。
 func (p *Payload) DecodeFromBytes(data []byte, df DecodeFeedback) error {
 	*p = Payload(data)
 	return nil
 }
 
-// SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
+// SerializeTo 将这个层的序列化形式写入 SerializationBuffer 中，
+// 实现了 gopacket.SerializableLayer 接口。
+// 有关更多信息，请查阅 gopacket.SerializableLayer 的文档。
 func (p Payload) SerializeTo(b SerializeBuffer, opts SerializeOptions) error {
 	bytes, err := b.PrependBytes(len(p))
 	if err != nil {
@@ -75,7 +70,7 @@ func (p Payload) SerializeTo(b SerializeBuffer, opts SerializeOptions) error {
 	return nil
 }
 
-// decodePayload decodes data by returning it all in a Payload layer.
+// decodePayload 将数据全部解码至一个 Payload 层中。
 func decodePayload(data []byte, p PacketBuilder) error {
 	payload := &Payload{}
 	if err := payload.DecodeFromBytes(data, p); err != nil {
@@ -86,8 +81,8 @@ func decodePayload(data []byte, p PacketBuilder) error {
 	return nil
 }
 
-// Fragment is a Layer containing a fragment of a larger frame, used by layers
-// like IPv4 and IPv6 that allow for fragmentation of their payloads.
+// Fragment 是一个包含较大帧的片段的数据层，
+// 被 IPv4 和 IPv6 等允许对有效载荷进行分片的层使用。
 type Fragment []byte
 
 // LayerType returns LayerTypeFragment
@@ -117,9 +112,9 @@ func (p *Fragment) DecodeFromBytes(data []byte, df DecodeFeedback) error {
 	return nil
 }
 
-// SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
+// SerializeTo 将这个层的序列化形式写入 SerializationBuffer 中，
+// 其实现了 gopacket.SerializableLayer 接口。
+// 有关更多信息，请查阅 gopacket.SerializableLayer 的文档。
 func (p *Fragment) SerializeTo(b SerializeBuffer, opts SerializeOptions) error {
 	bytes, err := b.PrependBytes(len(*p))
 	if err != nil {

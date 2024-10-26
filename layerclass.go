@@ -7,15 +7,15 @@
 
 package gopacket
 
-// LayerClass is a set of LayerTypes, used for grabbing one of a number of
-// different types from a packet.
+// LayerClass 是一组 LayerTypes，
+// 用于从数据包的多种不同类型数据层中的获取某一特点数据层。
 type LayerClass interface {
 	// Contains returns true if the given layer type should be considered part
 	// of this layer class.
+	// 如果给定的数据层类型是该 LayerClass 的一部分，则返回 true。
 	Contains(LayerType) bool
-	// LayerTypes returns the set of all layer types in this layer class.
-	// Note that this may not be a fast operation on all LayerClass
-	// implementations.
+	// LayerTypes 返回该 LayerClass 中包含的所有数据层类型。
+	// 注意：在 LayerClass 的某些实现中，这可能不是一个快速的操作。
 	LayerTypes() []LayerType
 }
 

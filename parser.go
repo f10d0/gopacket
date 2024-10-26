@@ -11,38 +11,31 @@ import (
 	"fmt"
 )
 
-// A container for single LayerType->DecodingLayer mapping.
+// 用于实现单个 LayerType->DecodingLayer 映射的容器。
 type decodingLayerElem struct {
 	typ LayerType
 	dec DecodingLayer
 }
 
-// DecodingLayer is an interface for packet layers that can decode themselves.
+// DecodingLayer 接口表示了能够解码自身的数据包数据层。
 //
-// The important part of DecodingLayer is that they decode themselves in-place.
-// Calling DecodeFromBytes on a DecodingLayer totally resets the entire layer to
-// the new state defined by the data passed in.  A returned error leaves the
-// DecodingLayer in an unknown intermediate state, thus its fields should not be
-// trusted.
+// DecodingLayer 的重要一点是它们在原地解码自己。
+// 在 DecodingLayer 上调用 DecodeFromBytes 会完全重置整个数据层，使其状态由传入的数据定义。
+// 返回的错误会使 DecodingLayer 处于未知的中间状态，因此不应信任其中的任何字段。
 //
-// Because the DecodingLayer is resetting its own fields, a call to
-// DecodeFromBytes should normally not require any memory allocation.
+// 由于 DecodingLayer 是在重置自己的字段，因此对 DecodeFromBytes 的调用通常不需要任何内存分配。
 type DecodingLayer interface {
-	// DecodeFromBytes resets the internal state of this layer to the state
-	// defined by the passed-in bytes.  Slices in the DecodingLayer may
-	// reference the passed-in data, so care should be taken to copy it
-	// first should later modification of data be required before the
-	// DecodingLayer is discarded.
+	// DecodeFromBytes 重置这个数据层的内部状态，使其状态由传入的字节定义。
+	// DecodingLayer 中的切片可能引用传入的数据，
+	// 因此如果需要修改传入 DecodingLayer 的原始数据，
+	// 请将传入参数设置为原始数据的副本，或确保在修改时 DecodingLayer 已不再使用。
 	DecodeFromBytes(data []byte, df DecodeFeedback) error
-	// CanDecode returns the set of LayerTypes this DecodingLayer can
-	// decode.  For Layers that are also DecodingLayers, this will most
-	// often be that Layer's LayerType().
+	// CanDecode 返回这个 DecodingLayer 可以解码的 LayerTypes 集合。
+	// 对于同时也是 DecodingLayers 的 Layer，这通常是该 Layer 的 LayerType()。
 	CanDecode() LayerClass
-	// NextLayerType returns the LayerType which should be used to decode
-	// the LayerPayload.
+	// NextLayerType 返回应该用于解码 LayerPayload 的 LayerType。
 	NextLayerType() LayerType
-	// LayerPayload is the set of bytes remaining to decode after a call to
-	// DecodeFromBytes.
+	// LayerPayload 是调用 DecodeFromBytes 后剩余的字节集合。
 	LayerPayload() []byte
 }
 
@@ -50,10 +43,13 @@ type DecodingLayer interface {
 // values into specified slice. Returns either first encountered
 // unsupported LayerType value or decoding error. In case of success,
 // returns (LayerTypeZero, nil).
+// DecodingLayerFUnc 解码给定的数据包，并将解码后的 LayerType 值存储到指定的切片中。
+// - 如果成功，则返回 (LayerTypeZero, nil)。
+// - 失败则返回解码过程中第一个不支持的 LayerType 值及 解码错误。
 type DecodingLayerFunc func([]byte, *[]LayerType) (LayerType, error)
 
-// DecodingLayerContainer stores all DecodingLayer-s and serves as a
-// searching tool for DecodingLayerParser.
+// DecodingLayerContainer 存储所有 DecodingLayer，
+// 并作为 DecodingLayerParser 的搜索工具。
 type DecodingLayerContainer interface {
 	// Put adds new DecodingLayer to container. The new instance of
 	// the same DecodingLayerContainer is returned so it may be
