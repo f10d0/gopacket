@@ -9,7 +9,7 @@
 package layers
 
 import (
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 	"reflect"
 	"testing"
 )

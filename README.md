@@ -11,9 +11,9 @@
 - 进一步扩展对DNSSEC的支持
 - 添加更多RR类型
 
-有关更多详细信息，请参阅 [godoc](https://godoc.org/github.com/tochusc/gopacket)。
+有关更多详细信息，请参阅 [godoc](https://godoc.org/github.com/google/gopacket)。
 
-[![GoDoc](https://godoc.org/github.com/tochusc/gopacket?status.svg)](https://godoc.org/github.com/tochusc/gopacket)
+[![GoDoc](https://godoc.org/github.com/google/gopacket?status.svg)](https://godoc.org/github.com/google/gopacket)
 
 最低 Go 版本要求是 1.9
 

@@ -10,7 +10,7 @@
 // The tcpassembly package implements uni-directional TCP reassembly, for use in
 // packet-sniffing applications.  The caller reads packets off the wire, then
 // presents them to an Assembler in the form of gopacket layers.TCP packets
-// (github.com/tochusc/gopacket, github.com/tochusc/gopacket/layers).
+// (github.com/google/gopacket, github.com/google/gopacket/layers).
 //
 // The Assembler uses a user-supplied
 // StreamFactory to create a user-defined Stream interface, then passes packet
@@ -22,15 +22,15 @@ package tcpassembly
 import (
 	"flag"
 	"fmt"
-	"github.com/tochusc/gopacket"
-	"github.com/tochusc/gopacket/layers"
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"log"
 	"sync"
 	"time"
 )
 
-var memLog = flag.Bool("assembly_memuse_log", false, "If true, the github.com/tochusc/gopacket/tcpassembly library will log information regarding its memory use every once in a while.")
-var debugLog = flag.Bool("assembly_debug_log", false, "If true, the github.com/tochusc/gopacket/tcpassembly library will log verbose debugging information (at least one line per packet)")
+var memLog = flag.Bool("assembly_memuse_log", false, "If true, the github.com/google/gopacket/tcpassembly library will log information regarding its memory use every once in a while.")
+var debugLog = flag.Bool("assembly_debug_log", false, "If true, the github.com/google/gopacket/tcpassembly library will log verbose debugging information (at least one line per packet)")
 
 const invalidSequence = -1
 const uint32Size = 1 << 32

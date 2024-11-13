@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 // VXLAN is specifed in RFC 7348

@@ -12,7 +12,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 /*

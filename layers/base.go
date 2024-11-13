@@ -8,7 +8,7 @@
 package layers
 
 import (
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 // BaseLayer 是一个实现了 Layer 接口中 LayerData 和 LayerPayload 函数的便利结构体。

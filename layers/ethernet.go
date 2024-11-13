@@ -12,7 +12,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 	"net"
 )
 

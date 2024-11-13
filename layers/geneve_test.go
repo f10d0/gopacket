@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 var testPacketGeneve1 = []byte{

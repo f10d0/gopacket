@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 const eapolErrFmt = "%s packet processing failed:\ngot  :\n%#v\n\nwant :\n%#v\n\n"

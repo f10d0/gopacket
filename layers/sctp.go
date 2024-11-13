@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"hash/crc32"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 // SCTP contains information on the top level of an SCTP packet.

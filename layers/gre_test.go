@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 // testPacketGRE is the packet:

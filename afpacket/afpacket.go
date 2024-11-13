@@ -29,7 +29,7 @@ import (
 	"golang.org/x/net/bpf"
 	"golang.org/x/sys/unix"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 /*

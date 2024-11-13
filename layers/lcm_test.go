@@ -11,7 +11,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 var (

@@ -8,7 +8,7 @@
 /*
 pcap 允许 gopacket 的使用者从网络或者 pcap 文件中读取数据包。
 
-pcap 包是 gopacket 的子包，http://github.com/tochusc/gopacket，
+pcap 包是 gopacket 的子包，http://github.com/google/gopacket，
 虽然它也可以独立使用，如果你仅仅只是想从网络中获取数据包的话。
 
 依赖于 libpcap 的版本，操作系统的支持，或文件时间戳的分辨率的不同，

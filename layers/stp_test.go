@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 var testPacketSTPRDATA = []byte{

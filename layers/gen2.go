@@ -31,7 +31,7 @@ package layers
 import (
   "fmt"
 
-  "github.com/tochusc/gopacket"
+  "github.com/google/gopacket"
 )
 
 `

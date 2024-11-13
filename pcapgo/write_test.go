@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 func TestWriteHeaderNanos(t *testing.T) {

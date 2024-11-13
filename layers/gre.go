@@ -10,7 +10,7 @@ package layers
 import (
 	"encoding/binary"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 // GRE is a Generic Routing Encapsulation header.

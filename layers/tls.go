@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 // TLSType defines the type of data after the TLS Record

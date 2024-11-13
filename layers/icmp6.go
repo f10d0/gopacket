@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 const (

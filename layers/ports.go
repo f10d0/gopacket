@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/tochusc/gopacket"
+	"github.com/google/gopacket"
 )
 
 // TCPPort is a port in a TCP layer.

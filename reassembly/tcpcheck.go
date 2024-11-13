@@ -11,8 +11,8 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/tochusc/gopacket"
-	"github.com/tochusc/gopacket/layers"
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 )
 
 /*
