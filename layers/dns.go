@@ -1253,6 +1253,9 @@ func (rrsig *DNSRRSIG) decode(data []byte, offset int) error {
 	rrsig.Inception = binary.BigEndian.Uint32(data[offset+12:])
 	rrsig.KeyTag = binary.BigEndian.Uint16(data[offset+16:])
 	_, offset, err = decodeName(data, offset+18, &rrsig.SignerName, 1)
+	if len(rrsig.SignerName) == 0{
+		return errRRSIGOutOfBound
+	}
 	rrsig.SignerName = rrsig.SignerName[1:] // remove the first '.'
 	if err != nil {
 		return err
@@ -1449,4 +1452,6 @@ var (
 	errDecodeQueryBadANCount = errors.New("Invalid query decoding, not the right number of answers")
 	errDecodeQueryBadNSCount = errors.New("Invalid query decoding, not the right number of authorities")
 	errDecodeQueryBadARCount = errors.New("Invalid query decoding, not the right number of additionals info")
+
+	errRRSIGOutOfBound = errors.New("out of bounds error processing RRSIG")
 )
