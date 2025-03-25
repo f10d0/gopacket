@@ -110,7 +110,7 @@ func (h *EthernetHandle) readOne() (ci gopacket.CaptureInfo, vlan int, haveVlan 
 		switch {
 		case hdr.Level == unix.SOL_PACKET && hdr.Type == unix.PACKET_AUXDATA && len(oob) >= auxLen:
 			aux := (*unix.TpacketAuxdata)(unsafe.Pointer(&oob[hdrLen]))
-			ci.CaptureLength = int(n)
+			ci.CaptureLength = int(aux.Len)
 			ci.Length = int(aux.Len)
 			vlan = int(aux.Vlan_tci)
 			haveVlan = (aux.Status & unix.TP_STATUS_VLAN_VALID) != 0
@@ -329,7 +329,7 @@ func NewEthernetHandle(ifname string) (*EthernetHandle, error) {
 
 	handle := &EthernetHandle{
 		file:   os.NewFile(uintptr(fd), ""),
-		buffer: make([]byte, intf.MTU),
+		buffer: make([]byte, intf.MTU+38), // MTU + Ethernet Header (Ethernet II[14] + VLAN[4] + QinQ[4] + MACsec[16])
 		oob:    make([]byte, ooblen),
 		ancil:  make([]interface{}, 1),
 		intf:   intf.Index,
